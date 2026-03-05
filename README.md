@@ -1,5 +1,6 @@
 # punyCod3 Tools
 ```text
-This tools i build for checking a domain with a cyrillic alphabet<br>
-or not for protect us from phising and socisl engineering.
+This tool was built to check whether a domain uses Cyrillic characters or not,
+helping protect users from phishing and social engineering attacks.
 ```
+Special thanks to: @zoxxtzy
