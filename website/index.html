@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punycode & Homograph Toolkit</title>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Punycode -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/punycode/2.3.1/punycode.min.js"></script>
+  </head>
+  <body class="font-[Rajdhani] bg-gray-950 text-gray-200 min-h-screen flex flex-col items-center justify-center">
+    <!-- Title -->
+    <header class="text-center mb-6">
+      <h1 class="text-5xl font-bold italic text-red-500
+drop-shadow-[0_0_6px_#ff0033]
+drop-shadow-[0_0_18px_#ff0033]"> PunyCode Cipher </h1>
+      <p class="text-rose-600 font-semibold italic mt-1"> This Script Was Coded by @zoxxtzy </p>
+    </header>
+    <!-- Main Tool -->
+    <main class="max-w-xl w-full bg-gray-900 p-8 rounded-2xl shadow-lg">
+      <h2 class="text-2xl font-bold text-white mb-1"> Punycode & Homograph Toolkit </h2>
+      <p class="text-gray-400 text-sm mb-6"> Detect and convert domains using Unicode / Punycode. </p>
+      <!-- Input -->
+      <input id="inputText" type="text" placeholder="Enter domain or text..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 mb-4 focus:outline-none focus:ring-2 focus:ring-red-500" />
+      <!-- Buttons -->
+      <div class="flex gap-3 mb-6">
+        <button id="encodeBtn" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg w-full transition"> Encode </button>
+        <button id="decodeBtn" class="bg-green-600 hover:bg-green-500 px-4 py-2 rounded-lg w-full transition"> Decode </button>
+        <button id="homographBtn" class="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg w-full transition"> Homograph </button>
+      </div>
+      <!-- Output -->
+      <section class="bg-black p-4 rounded-lg font-mono text-sm break-all">
+        <span class="text-gray-500"> Result: </span>
+        <p id="output" class="mt-2 text-green-400"></p>
+      </section>
+    </main>
+    <!-- Footer -->
+    <footer class="mt-6 text-center">
+      <p class="text-white text-lg font-semibold"> Interest for this code? <a href="https://github.com/Ryygans/punyCod3/" class="text-blue-500 italic hover:underline"> Check here </a>
+      </p>
+    </footer>
+    <script>
+      /* =============================
+   DOM Elements
+============================= */
+      const input = document.getElementById("inputText");
+      const output = document.getElementById("output");
+      const encodeBtn = document.getElementById("encodeBtn");
+      const decodeBtn = document.getElementById("decodeBtn");
+      const homographBtn = document.getElementById("homographBtn");
+      /* =============================
+         Helpers
+      ============================= */
+      function getInput() {
+        return input.value.trim();
+      }
+
+      function setOutput(value) {
+        output.textContent = value;
+      }
+
+      function validateInput() {
+        const value = getInput();
+        if (!value) {
+          setOutput("Input cannot be empty");
+          return null;
+        }
+        return value;
+      }
+      /* =============================
+         Homograph Mapping
+      ============================= */
+      const CYRILLIC_MAP = {
+        a: "а",
+        e: "е",
+        o: "о",
+        p: "р",
+        c: "с",
+        x: "х",
+        y: "у",
+        i: "і",
+        l: "ӏ"
+      };
+      /* =============================
+         Core App
+      ============================= */
+      const app = {
+        encode() {
+          const text = validateInput();
+          if (!text) return;
+          try {
+            const result = punycode.toASCII(text);
+            setOutput(result);
+          } catch {
+            setOutput("Invalid input");
+          }
+        },
+        decode() {
+          const text = validateInput();
+          if (!text) return;
+          try {
+            const result = punycode.toUnicode(text);
+            setOutput(result);
+          } catch {
+            setOutput("Invalid punycode");
+          }
+        },
+        homograph() {
+          const text = validateInput();
+          if (!text) return;
+          const result = [...text].map(char => CYRILLIC_MAP[char.toLowerCase()] || char).join("");
+          setOutput(result);
+        }
+      };
+      /* =============================
+         Event Listeners
+      ============================= */
+      encodeBtn.addEventListener("click", app.encode);
+      decodeBtn.addEventListener("click", app.decode);
+      homographBtn.addEventListener("click", app.homograph);
+      /* =============================
+         Keyboard Shortcut
+      ============================= */
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          app.encode();
+        }
+      });
+    </script>
+  </body>
+</html>
